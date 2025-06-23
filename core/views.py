@@ -12,12 +12,12 @@ from .serializers import RegisterSerializer, FeedbackGroupSerializer, FeedbackSe
 from .permissions import IsAdminUser
 
 
-# ✅ Custom throttle class
+#  Custom throttle class
 class CustomThrottle(UserRateThrottle):
     rate = '2/min'  # Limit to 2 feedback submissions per minute
 
 
-# ✅ Utility to get IP address
+#  Utility to get IP address
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -25,7 +25,7 @@ def get_client_ip(request):
     return request.META.get('REMOTE_ADDR')
 
 
-# ✅ Admin registration
+#  Admin registration
 class RegisterView(APIView):
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -35,7 +35,7 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# ✅ Create/List feedback groups
+#  Create/List feedback groups
 class FeedbackGroupListCreateView(generics.ListCreateAPIView):
     queryset = FeedbackGroup.objects.all()
     serializer_class = FeedbackGroupSerializer
@@ -45,14 +45,14 @@ class FeedbackGroupListCreateView(generics.ListCreateAPIView):
         serializer.save(created_by=self.request.user)
 
 
-# ✅ Get/Update/Delete a group
+#  Get/Update/Delete a group
 class FeedbackGroupRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = FeedbackGroup.objects.all()
     serializer_class = FeedbackGroupSerializer
     permission_classes = [permissions.IsAuthenticated, IsAdminUser]
 
 
-# ✅ Submit anonymous feedback (public)
+#  Submit anonymous feedback (public)
 @api_view(['POST'])
 @throttle_classes([CustomThrottle])
 def submit_feedback(request):
@@ -66,7 +66,7 @@ def submit_feedback(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# ✅ List feedbacks for a group
+#  List feedbacks for a group
 class FeedbackListView(generics.ListAPIView):
     serializer_class = FeedbackSerializer
     filter_backends = [filters.OrderingFilter]
@@ -82,7 +82,7 @@ class FeedbackListView(generics.ListAPIView):
             return Feedback.objects.filter(group=group, is_hidden=False)
 
 
-# ✅ Hide/Delete feedback (admin only)
+#  Hide/Delete feedback (admin only)
 class FeedbackModerationView(mixins.DestroyModelMixin,
                              mixins.UpdateModelMixin,
                              GenericAPIView):
