@@ -114,8 +114,8 @@ To prevent spam:
 •	Feedback submission endpoint: 2/minute
 ________________________________________
  Bonus Features
-•	✅ Swagger & Redoc UI
-•	✅ Modular codebase with permissions & serializers
+•	 Swagger & Redoc UI
+•	 Modular codebase with permissions & serializers
 ________________________________________
  Running Tests
 python manage.py test
